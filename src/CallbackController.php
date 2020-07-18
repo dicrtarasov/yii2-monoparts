@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:53:54
+ * @version 19.07.20 03:59:09
  */
 
 declare(strict_types = 1);
@@ -22,6 +22,12 @@ use function call_user_func;
  */
 class CallbackController extends Controller
 {
+    /**
+     * @inheritDoc
+     * @var bool отключаем CSRF-проверку для запросов банка
+     */
+    public $enableCsrfValidation = false;
+
     /**
      * Обработка результатов оплаты (запросы от банка).
      *
