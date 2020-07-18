@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:55:30
+ * @version 19.07.20 02:14:07
  */
 
 declare(strict_types = 1);
@@ -18,7 +18,6 @@ use function array_unique;
 use function gettype;
 use function is_array;
 use function preg_match;
-use function preg_replace;
 use const SORT_NUMERIC;
 
 /**
@@ -78,21 +77,7 @@ class PaymentRequest extends AbstractRequest
 
             ['clientPhone', 'trim'],
             ['clientPhone', 'required'],
-            ['clientPhone', function($attribute) {
-                // удаляем все не числа
-                $this->{$attribute} = preg_replace('~[\D]+~u', '', (string)$this->{$attribute});
-
-                // удаляем ^380 если есть
-                $this->{$attribute} = preg_replace('~^380~u', '', $this->{$attribute});
-
-                // добавляем +380
-                $this->{$attribute} = '+380' . $this->{$attribute};
-
-                // проверяем формат
-                if (! preg_match('~^\+380\d{9}$~', $this->{$attribute})) {
-                    $this->addError($attribute, 'Некорректный телефон');
-                }
-            }],
+            ['clientPhone', PhoneValidator::class],
 
             ['invoiceDate', 'required'],
             ['invoiceDate', 'date', 'format' => 'php:Y-m-d'],

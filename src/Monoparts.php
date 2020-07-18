@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:56:39
+ * @version 19.07.20 02:19:00
  */
 
 declare(strict_types = 1);
@@ -25,6 +25,9 @@ interface Monoparts
 
     /** @var string */
     public const TEST_KEY = 'secret_98765432--123-123';
+
+    /** @var string тестовый телефон */
+    public const TEST_PHONE = '+380951000001';
 
     /** @var int минимальная сумма платежа */
     public const SUM_MIN = 500;

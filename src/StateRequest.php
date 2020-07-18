@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:51:28
+ * @version 19.07.20 02:14:55
  */
 
 declare(strict_types = 1);
@@ -20,7 +20,7 @@ use yii\httpclient\Client;
  */
 class StateRequest extends AbstractRequest
 {
-    /** @var string номер заявки полученный в PaymentRequest */
+    /** @var string номер заявки покупки частями, полученный в PaymentRequest */
     public $orderId;
 
     /**

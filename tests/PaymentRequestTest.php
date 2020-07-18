@@ -3,42 +3,21 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:57:10
+ * @version 19.07.20 02:25:51
  */
 
 declare(strict_types = 1);
 namespace dicr\tests;
 
 use dicr\monoparts\Monoparts;
-use dicr\monoparts\MonopartsModule;
 use dicr\validate\ValidateException;
-use PHPUnit\Framework\TestCase;
-use Yii;
 use yii\httpclient\Exception;
 
 /**
  * Class PaymentRequestTest
- *
- * Тестовая платформа содержит только 1 магазина и отдает только заранее подготовленные ситуации.
- * store-id: test_store_with_confirm
- * ключ: secret_98765432--123-123
- * link: https://u2-demo-ext.mono.st4g3.com
- *
- * @link https://u2-demo-ext.mono.st4g3.com/docs/index.html#section/Avtorizaciya-(podpis-zaprosov-otvetov)/Testovaya-platforma
  */
-class PaymentRequestTest extends TestCase
+class PaymentRequestTest extends AbstractTest
 {
-    /**
-     * Модуль
-     *
-     * @return MonopartsModule
-     */
-    protected function module()
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return Yii::$app->getModule('monoparts');
-    }
-
     /**
      * Возможные ситуации:
      * - Успешное подтверждение заявки. Для данной ситуации нужно передать номер телефона клиента,
@@ -60,7 +39,7 @@ class PaymentRequestTest extends TestCase
         // отправляем заявку на платеж
         $paymentRequest = $this->module()->createPaymentRequest([
             'storeOrderId' => time(),
-            'clientPhone' => '+380500000001',
+            'clientPhone' => Monoparts::TEST_PHONE,
             'invoiceDate' => date('Y-m-d'),
             'invoiceNum' => time(),
             'partsCount' => [3, 4, 5],
@@ -73,7 +52,6 @@ class PaymentRequestTest extends TestCase
 
         $paymentId = $paymentRequest->send();
         self::assertNotEmpty($paymentId);
-        echo 'paymentId: ' . $paymentId . "\n";
 
         // проверяем состояние платежа
         $stateRequest = $this->module()->createStateRequest([

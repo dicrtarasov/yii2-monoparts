@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 20:59:51
+ * @version 19.07.20 02:25:16
  */
 
 declare(strict_types = 1);
@@ -12,8 +12,6 @@ namespace dicr\monoparts;
 use dicr\validate\ValidateException;
 use yii\base\Exception;
 use yii\httpclient\Client;
-use function preg_match;
-use function preg_replace;
 
 /**
  * Валидация клиента (версия 2).
@@ -33,21 +31,7 @@ class ValidateClientRequest extends AbstractRequest
         return [
             ['phone', 'trim'],
             ['phone', 'required'],
-            ['phone', function($attribute) {
-                // удаляем все не числа
-                $this->{$attribute} = preg_replace('~[\D]+~u', '', (string)$this->{$attribute});
-
-                // удаляем ^380 если есть
-                $this->{$attribute} = preg_replace('~^380~u', '', $this->{$attribute});
-
-                // добавляем +380
-                $this->{$attribute} = '+380' . $this->{$attribute};
-
-                // проверяем формат
-                if (! preg_match('~^\+380\d{9}$~', $this->{$attribute})) {
-                    $this->addError($attribute, 'Некорректный телефон');
-                }
-            }]
+            ['phone', PhoneValidator::class]
         ];
     }
 
@@ -92,6 +76,6 @@ class ValidateClientRequest extends AbstractRequest
             throw new Exception('Неизвестный формат ответа: ' . $response->toString());
         }
 
-        return (bool)$response->data['found'];
+        return $response->data['found'] === true || $response->data['found'] === 'true';
     }
 }
