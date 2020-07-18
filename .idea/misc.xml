@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ComposerJsonPluginSettings">
+    <unboundedVersionInspectionSettings>
+      <excludedPackages>
+        <pattern pattern="roave/security-advisories" />
+      </excludedPackages>
+    </unboundedVersionInspectionSettings>
+    <customRepositories />
+    <composerUpdateOptions />
+  </component>
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="PhpEntryPointsManager">
+    <entry_point>
+      <entry_point TYPE="phpClass" FQNAME="\dicr\monoparts\CallbackController" />
+    </entry_point>
+    <pattern value="\dicr\monoparts\CallbackController" />
+  </component>
+</project>
