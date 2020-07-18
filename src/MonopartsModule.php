@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:54:47
+ * @version 19.07.20 00:17:56
  */
 
 declare(strict_types = 1);
@@ -36,6 +36,7 @@ use function is_callable;
  * подтверждением) - передать номер телефона клиента, который заканчивается на 4.
  *
  * @api https://u2-demo-ext.mono.st4g3.com/docs/index.html
+ * @api https://u2-demo.ftband.com/docs/index.html
  */
 class MonopartsModule extends Module implements Monoparts
 {
