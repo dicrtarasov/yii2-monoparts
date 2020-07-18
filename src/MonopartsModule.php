@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 00:17:56
+ * @version 19.07.20 02:50:58
  */
 
 declare(strict_types = 1);
@@ -12,8 +12,6 @@ namespace dicr\monoparts;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
-use yii\caching\CacheInterface;
-use yii\di\Instance;
 use yii\httpclient\Client;
 use yii\web\Application;
 use yii\web\JsonParser;
@@ -55,14 +53,7 @@ class MonopartsModule extends Module implements Monoparts
     /** @var array конфиг по-умолчанию для PaymentRequest */
     public $paymentRequestConfig = [];
 
-    /** @var CacheInterface */
-    public $cache = 'cache';
-
-    /**
-     * @var callable|null function(string $paymentId, string $orderId) обработчик оплаты заказа
-     * string $paymentId - номер заявки на оплату
-     * string $orderId - номер оплаченного заказа
-     */
+    /** @var callable|null function(string $paymentId) обработчик оплаты покупки */
     public $paymentHandler;
 
     /**
@@ -87,8 +78,6 @@ class MonopartsModule extends Module implements Monoparts
         if (empty($this->secretKey)) {
             throw new InvalidConfigException('secretKey');
         }
-
-        $this->cache = Instance::ensure($this->cache);
 
         if (! empty($this->paymentHandler) && ! is_callable($this->paymentHandler)) {
             throw new InvalidConfigException('paymentHandler');
@@ -173,37 +162,5 @@ class MonopartsModule extends Module implements Monoparts
     public function createStateRequest(array $config = [])
     {
         return new StateRequest($this, $config);
-    }
-
-    /**
-     * Сохраняет соответствие номера заказа магазина номеру заявки на оплату частями.
-     *
-     * @param string $paymentId номер заявки на оплату частями
-     * @param string $orderId номер заказа магазина
-     */
-    public function savePaymentOrder(string $paymentId, string $orderId)
-    {
-        $this->cache->set([__CLASS__, $this->storeId, $paymentId], $orderId);
-    }
-
-    /**
-     * Возвращает номер заказа, соответствующий номеру заявки оплаты частями.
-     *
-     * @param string $paymentId номер заявки оплаты частями
-     * @return string номер заказа магазина ('' - если не найдена)
-     */
-    public function loadPaymentOrder(string $paymentId)
-    {
-        return (string)$this->cache->get([__CLASS__, $this->storeId, $paymentId]);
-    }
-
-    /**
-     * Удаляет соответствие номера заказа магазина номеру заявки.
-     *
-     * @param string $paymentId номер заявки на оплату частями.
-     */
-    public function deletePaymentOrder(string $paymentId)
-    {
-        $this->cache->delete([__CLASS__, $this->storeId, $paymentId]);
     }
 }
