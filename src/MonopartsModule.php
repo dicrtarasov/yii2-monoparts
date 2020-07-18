@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:50:58
+ * @version 19.07.20 03:26:23
  */
 
 declare(strict_types = 1);
@@ -12,6 +12,7 @@ namespace dicr\monoparts;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
+use yii\helpers\Url;
 use yii\httpclient\Client;
 use yii\web\Application;
 use yii\web\JsonParser;
@@ -92,7 +93,7 @@ class MonopartsModule extends Module implements Monoparts
 
             // добавляем адрес обработчика ответов банка
             if (! isset($this->paymentRequestConfig['callback'])) {
-                $this->paymentRequestConfig['callback'] = ['/' . $this->uniqueId . '/callback'];
+                $this->paymentRequestConfig['callback'] = Url::to(['/' . $this->uniqueId . '/callback'], true);
             }
         }
     }
