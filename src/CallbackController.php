@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 18.07.20 22:51:28
+ * @version 19.07.20 02:53:54
  */
 
 declare(strict_types = 1);
@@ -43,22 +43,20 @@ class CallbackController extends Controller
         $paymentState = new StateResponse(Yii::$app->request->getBodyParams());
         $paymentId = $paymentState->order_id;
 
-        // получаем номер заказа магазина по номеру заявки на оплату
-        $orderId = $this->module->loadPaymentOrder($paymentId);
-        $this->module->deletePaymentOrder($paymentId);
-
         if ($paymentState->state === StateResponse::STATE_SUCCESS) {
-            Yii::info('Успешная оплата №' . $paymentId . ' заказа №' . $orderId, __METHOD__);
+            Yii::debug('Успешная оплата №' . $paymentId, __METHOD__);
 
             if (! empty($this->module->paymentHandler)) {
-                call_user_func($this->module->paymentHandler, $paymentId, $orderId);
+                call_user_func($this->module->paymentHandler, $paymentId);
             }
         } elseif ($paymentState->state === StateResponse::STATE_FAIL) {
-            Yii::warning('Ошибка оплаты №' . $paymentId . ' заказа №' . $orderId . ': ' .
-                $paymentState->order_sub_state, __METHOD__);
-
+            Yii::warning('Ошибка оплаты №' . $paymentId . ': ' . $paymentState->order_sub_state,
+                __METHOD__
+            );
         } else {
-            throw new BadRequestHttpException('Некорректное состояние оплаты: ' . $paymentState->state);
+            throw new BadRequestHttpException('Некорректное состояние оплаты №' . $paymentId . ': ' .
+                $paymentState->state
+            );
         }
     }
 }
