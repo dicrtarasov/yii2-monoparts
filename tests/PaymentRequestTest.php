@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:25:51
+ * @version 19.07.20 02:37:12
  */
 
 declare(strict_types = 1);
@@ -40,8 +40,6 @@ class PaymentRequestTest extends AbstractTest
         $paymentRequest = $this->module()->createPaymentRequest([
             'storeOrderId' => time(),
             'clientPhone' => Monoparts::TEST_PHONE,
-            'invoiceDate' => date('Y-m-d'),
-            'invoiceNum' => time(),
             'partsCount' => [3, 4, 5],
             'prods' => [
                 ['name' => 'Тест', 'price' => 123.45, 'quantity' => 1],

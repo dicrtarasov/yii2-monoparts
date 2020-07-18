@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:36:11
+ * @version 19.07.20 02:38:01
  */
 
 declare(strict_types = 1);
@@ -79,7 +79,7 @@ class PaymentRequest extends AbstractRequest
             ['clientPhone', 'required'],
             ['clientPhone', PhoneValidator::class],
 
-            ['invoiceData', 'trim'],
+            ['invoiceDate', 'trim'],
             ['invoiceDate', 'default', 'value' => date('Y-m-d')],
             ['invoiceDate', 'date', 'format' => 'php:Y-m-d'],
 
