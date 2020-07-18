@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:38:01
+ * @version 19.07.20 03:47:23
  */
 
 declare(strict_types = 1);
@@ -236,9 +236,6 @@ class PaymentRequest extends AbstractRequest
         if (empty($paymentId)) {
             throw new Exception('Не получен номер заявки от банка: ' . $response->toString());
         }
-
-        // так как в callback банк не передает номер заказа магазина, то сохраняем в кеше
-        $this->module->savePaymentOrder($paymentId, $this->storeOrderId);
 
         return $paymentId;
     }
