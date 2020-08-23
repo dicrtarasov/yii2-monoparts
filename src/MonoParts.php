@@ -1,9 +1,9 @@
 <?php
-/**
+/*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:19:00
+ * @version 24.08.20 01:52:50
  */
 
 declare(strict_types = 1);
@@ -12,22 +12,37 @@ namespace dicr\monoparts;
 /**
  * Константы.
  */
-interface Monoparts
+interface MonoParts
 {
     /** @var string */
-    public const API_URL = 'https://u2.monobank.com.ua';
+    public const API_URL = 'https://u2.monobank.com.ua/api';
 
     /** @var string */
-    public const TEST_URL = 'https://u2-demo-ext.mono.st4g3.com';
+    public const TEST_URL = 'https://u2-demo-ext.mono.st4g3.com/api';
 
-    /** @var string */
+    /**
+     * @var string storeId тестовый
+     * @link https://u2-demo-ext.mono.st4g3.com/docs/index.html#section/Avtorizaciya-(podpis-zaprosov-otvetov)/Testovaya-platforma
+     */
     public const TEST_STORE_ID = 'test_store_with_confirm';
 
     /** @var string */
     public const TEST_KEY = 'secret_98765432--123-123';
 
+    /**
+     * @var string дополнительный storeId для тестов
+     * @link https://u2-demo-ext.mono.st4g3.com/docs/index.html#section/Avtorizaciya-(podpis-zaprosov-otvetov)/Predprod
+     */
+    public const TEST2_STORE_ID = 'COMFY';
+
+    /** @var string дополнительный тестовый аккаунт */
+    public const TEST2_KEY = 'sign_key';
+
     /** @var string тестовый телефон */
     public const TEST_PHONE = '+380951000001';
+
+    /** @var int кол-во частей платежа для теста (условия теста) */
+    public const TEST_PARTS_COUNT = 10;
 
     /** @var int минимальная сумма платежа */
     public const SUM_MIN = 500;

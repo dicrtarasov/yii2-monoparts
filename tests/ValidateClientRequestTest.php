@@ -1,17 +1,16 @@
 <?php
-/**
+/*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:23:21
+ * @version 24.08.20 03:04:22
  */
 
 declare(strict_types = 1);
 namespace dicr\tests;
 
-use dicr\monoparts\Monoparts;
-use dicr\validate\ValidateException;
-use yii\httpclient\Exception;
+use dicr\monoparts\MonoParts;
+use yii\base\Exception;
 
 /**
  * Class ValidateClientRequestTest
@@ -21,16 +20,16 @@ class ValidateClientRequestTest extends AbstractTest
     /**
      * Тест телефона покупателя.
      *
-     * @throws ValidateException
-     * @throws \yii\base\Exception
      * @throws Exception
      */
     public function testSend()
     {
         $request = $this->module()->createValidateClientRequest([
-            'phone' => Monoparts::TEST_PHONE
+            'phone' => MonoParts::TEST_PHONE
         ]);
 
-        self::assertTrue($request->send());
+        $response = $request->send();
+
+        self::assertTrue($response->found);
     }
 }

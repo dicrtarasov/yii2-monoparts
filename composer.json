@@ -2,7 +2,9 @@
     "name": "dicr/yii2-monoparts",
     "type": "yii2-extension",
     "license": "MIT",
+    "homepage": "https://gitlab.com/dicr/yii2-monoparts",
     "description": "API Покупка частями Monobank для Yii2",
+    "keywords": ["dicr", "yii2", "payment", "monobank", "parts"],
     "authors": [
         {
             "name": "Igor Tarasov",
@@ -11,8 +13,6 @@
             "role": "developer"
         }
     ],
-    "keywords": ["dicr", "yii2", "payment", "monobank", "parts"],
-    "homepage": "https://gitlab.com/dicr/yii2-monoparts",
     "support": {
         "source": "https://gitlab.com/dicr/yii2-monoparts.git"
     },
@@ -39,6 +39,6 @@
     ],
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "phpunit/phpunit": "~9.2"
+        "phpunit/phpunit": "~9.3"
     }
 }

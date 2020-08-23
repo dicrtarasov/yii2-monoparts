@@ -1,17 +1,19 @@
 <?php
-/**
+/*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:37:12
+ * @version 24.08.20 03:06:28
  */
 
 declare(strict_types = 1);
 namespace dicr\tests;
 
-use dicr\monoparts\Monoparts;
-use dicr\validate\ValidateException;
-use yii\httpclient\Exception;
+use dicr\monoparts\MonoParts;
+use dicr\monoparts\Product;
+use yii\base\Exception;
+
+use function time;
 
 /**
  * Class PaymentRequestTest
@@ -30,34 +32,37 @@ class PaymentRequestTest extends AbstractTest
      * - Заявка подтверждена клиентом и ожидает подтверждения от магазина (только для магазина с двухэтапным
      * подтверждением). Для данной ситуации нужно передать номер телефона клиента, который заканчивается на 4.
      *
-     * @throws ValidateException
-     * @throws \yii\base\Exception
      * @throws Exception
      */
     public function testSend()
     {
+        $storeOrderId = (string)time();
+
         // отправляем заявку на платеж
-        $paymentRequest = $this->module()->createPaymentRequest([
-            'storeOrderId' => time(),
-            'clientPhone' => Monoparts::TEST_PHONE,
-            'partsCount' => [3, 4, 5],
-            'prods' => [
-                ['name' => 'Тест', 'price' => 123.45, 'quantity' => 1],
-                ['name' => 'Тест', 'price' => 400, 'quantity' => 2]
-            ],
-            'callback' => null
+        $request = $this->module()->createOrderCreateRequest([
+            'storeOrderId' => $storeOrderId,
+            'clientPhone' => MonoParts::TEST_PHONE,
+            'partsCount' => [MonoParts::TEST_PARTS_COUNT],
+            'products' => [
+                new Product(['name' => 'Тест', 'sum' => 123.45, 'count' => 1]),
+                new Product(['name' => 'Тест', 'sum' => 400, 'count' => 2])
+            ]
         ]);
 
-        $paymentId = $paymentRequest->send();
-        self::assertNotEmpty($paymentId);
+        $response = $request->send();
+        self::assertNotEmpty($response->orderId);
+        echo 'OrderId: ' . $response->orderId . "\n";
 
         // проверяем состояние платежа
-        $stateRequest = $this->module()->createStateRequest([
-            'orderId' => $paymentId
+        $request = $this->module()->createOrderStateRequest([
+            'orderId' => $response->orderId
         ]);
 
-        $state = $stateRequest->send();
-        self::assertSame(Monoparts::STATE_SUCCESS, $state->state);
-        self::assertSame(Monoparts::SUB_STATE_ACTIVE, $state->order_sub_state);
+        $response = $request->send();
+        self::assertSame(MonoParts::STATE_SUCCESS, $response->state);
+        echo 'State: ' . $response->state . "\n";
+
+        self::assertSame(MonoParts::SUB_STATE_ACTIVE, $response->subState);
+        echo 'SubState: ' . $response->subState . "\n";
     }
 }

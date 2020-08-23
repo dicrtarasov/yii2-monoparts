@@ -1,15 +1,15 @@
 <?php
-/**
+/*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 02:21:27
+ * @version 24.08.20 00:53:15
  */
 
 declare(strict_types = 1);
 namespace dicr\tests;
 
-use dicr\monoparts\MonopartsModule;
+use dicr\monoparts\MonoPartsModule;
 use PHPUnit\Framework\TestCase;
 use Yii;
 
@@ -28,7 +28,7 @@ abstract class AbstractTest extends TestCase
     /**
      * Модуль
      *
-     * @return MonopartsModule
+     * @return MonoPartsModule
      */
     protected function module()
     {

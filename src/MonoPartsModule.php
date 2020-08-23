@@ -1,14 +1,17 @@
 <?php
-/**
+/*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 19.07.20 03:26:23
+ * @version 24.08.20 02:52:04
  */
 
 declare(strict_types = 1);
 namespace dicr\monoparts;
 
+use dicr\monoparts\request\OrderCreateRequest;
+use dicr\monoparts\request\OrderStateRequest;
+use dicr\monoparts\request\ValidateClientRequest;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
@@ -16,14 +19,14 @@ use yii\helpers\Url;
 use yii\httpclient\Client;
 use yii\web\Application;
 use yii\web\JsonParser;
+
+use function array_merge;
 use function base64_encode;
 use function hash_hmac;
 use function is_callable;
 
 /**
  * Модуль оплаты частями от Monobank v1.0.0.
- *
- * @property-read Client $httpClient
  *
  * Для теста:
  * - успешное подтверждение заявки - передать номер телефона клиента, который заканчивается на 1 - через 5 секунд
@@ -36,8 +39,10 @@ use function is_callable;
  *
  * @api https://u2-demo-ext.mono.st4g3.com/docs/index.html
  * @api https://u2-demo.ftband.com/docs/index.html
+ *
+ * @property-read Client $httpClient
  */
-class MonopartsModule extends Module implements Monoparts
+class MonoPartsModule extends Module implements MonoParts
 {
     /** @var string адрес API */
     public $url = self::API_URL;
@@ -51,11 +56,14 @@ class MonopartsModule extends Module implements Monoparts
     /** @var array конфиг HTTP-клиента */
     public $httpClientConfig = [];
 
-    /** @var array конфиг по-умолчанию для PaymentRequest */
-    public $paymentRequestConfig = [];
+    /** @var array конфиг по-умолчанию для CreateOrderRequest */
+    public $createRequestConfig = [];
 
-    /** @var callable|null function(string $paymentId) обработчик оплаты покупки */
-    public $paymentHandler;
+    /** @var ?callable function(OrderStateResponse $response) обработчик оплаты покупки */
+    public $handler;
+
+    /** @inheritDoc */
+    public $controllerNamespace = __NAMESPACE__;
 
     /**
      * @inheritDoc
@@ -65,17 +73,14 @@ class MonopartsModule extends Module implements Monoparts
     {
         parent::init();
 
-        $this->url = trim((string)$this->url);
         if (empty($this->url)) {
             throw new InvalidConfigException('url');
         }
 
-        $this->storeId = trim((string)$this->storeId);
         if (empty($this->storeId)) {
             throw new InvalidConfigException('storeId');
         }
 
-        $this->secretKey = trim((string)$this->secretKey);
         if (empty($this->secretKey)) {
             throw new InvalidConfigException('secretKey');
         }
@@ -85,16 +90,8 @@ class MonopartsModule extends Module implements Monoparts
         }
 
         if (Yii::$app instanceof Application) {
-            // контроллеры модуля
-            $this->controllerNamespace = __NAMESPACE__;
-
             // парсер JSON-запросов от банка
             Yii::$app->request->parsers['application/json'] = JsonParser::class;
-
-            // добавляем адрес обработчика ответов банка
-            if (! isset($this->paymentRequestConfig['callback'])) {
-                $this->paymentRequestConfig['callback'] = Url::to(['/' . $this->uniqueId . '/callback'], true);
-            }
         }
     }
 
@@ -131,16 +128,32 @@ class MonopartsModule extends Module implements Monoparts
     }
 
     /**
+     * Создает запрос.
+     *
+     * @param array $config
+     * @return MonoPartsRequest
+     * @throws InvalidConfigException
+     */
+    public function createRequest(array $config): MonoPartsRequest
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Yii::createObject($config, [$this]);
+    }
+
+    /**
      * Создает запрос на оплату.
      *
      * @param array $config
-     * @return PaymentRequest
+     * @return OrderCreateRequest
+     * @throws InvalidConfigException
      */
-    public function createPaymentRequest(array $config = [])
+    public function createOrderCreateRequest(array $config = []): OrderCreateRequest
     {
-        return new PaymentRequest($this, array_merge(
-            $this->paymentRequestConfig, $config
-        ));
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->createRequest(array_merge([
+            'class' => OrderCreateRequest::class,
+            'callback' => Url::to(['/' . $this->uniqueId . '/callback'], true)
+        ], $this->createRequestConfig ?: [], $config));
     }
 
     /**
@@ -148,20 +161,28 @@ class MonopartsModule extends Module implements Monoparts
      *
      * @param array $config
      * @return ValidateClientRequest
+     * @throws InvalidConfigException
      */
-    public function createValidateClientRequest(array $config = [])
+    public function createValidateClientRequest(array $config = []): ValidateClientRequest
     {
-        return new ValidateClientRequest($this, $config);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->createRequest(array_merge([
+            'class' => ValidateClientRequest::class
+        ], $this->createRequestConfig ?: [], $config));
     }
 
     /**
      * Создает запрос проверки статуса заявки.
      *
      * @param array $config
-     * @return StateRequest
+     * @return OrderStateRequest
+     * @throws InvalidConfigException
      */
-    public function createStateRequest(array $config = [])
+    public function createOrderStateRequest(array $config = []): OrderStateRequest
     {
-        return new StateRequest($this, $config);
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->createRequest(array_merge([
+            'class' => OrderStateRequest::class
+        ], $this->createRequestConfig ?: [], $config));
     }
 }
