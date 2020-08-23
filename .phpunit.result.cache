@@ -1,1 +1,0 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":270:{a:2:{s:7:"defects";a:2:{s:39:"dicr\tests\PaymentRequestTest::testSend";i:4;s:46:"dicr\tests\ValidateClientRequestTest::testSend";i:3;}s:5:"times";a:2:{s:39:"dicr\tests\PaymentRequestTest::testSend";d:1.864;s:46:"dicr\tests\ValidateClientRequestTest::testSend";d:0.682;}}}
