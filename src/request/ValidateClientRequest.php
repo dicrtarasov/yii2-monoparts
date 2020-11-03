@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:59:55
+ * @version 03.11.20 19:47:17
  */
 
 declare(strict_types = 1);
@@ -26,7 +26,7 @@ class ValidateClientRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['phone', 'trim'],
@@ -56,6 +56,7 @@ class ValidateClientRequest extends MonoPartsRequest
     /**
      * Отправка запроса.
      *
+     * @return ValidateClientResponse
      * @throws Exception
      */
     public function send(): ValidateClientResponse

@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 03:06:28
+ * @version 03.11.20 19:50:52
  */
 
 declare(strict_types = 1);
@@ -34,7 +34,7 @@ class PaymentRequestTest extends AbstractTest
      *
      * @throws Exception
      */
-    public function testSend()
+    public function testSend() : void
     {
         $storeOrderId = (string)time();
 

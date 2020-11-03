@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:34:47
+ * @version 03.11.20 19:50:46
  */
 
 declare(strict_types = 1);
@@ -34,7 +34,7 @@ class OrderReturnRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['orderId', 'trim'],
@@ -51,7 +51,7 @@ class OrderReturnRequest extends MonoPartsRequest
 
             ['sum', 'required'],
             ['sum', 'number', 'min' => 0.01],
-            ['sum', 'filter', 'filter' => static function ($sum) {
+            ['sum', 'filter', 'filter' => static function ($sum) : float {
                 return round((float)$sum, 2);
             }]
         ];

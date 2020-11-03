@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 01:10:25
+ * @version 03.11.20 19:51:37
  */
 
 declare(strict_types = 1);
@@ -32,7 +32,7 @@ class Product extends Model
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['name', 'trim'],
@@ -45,7 +45,7 @@ class Product extends Model
 
             ['sum', 'required'],
             ['sum', 'number', 'min' => 0.01],
-            ['sum', 'filter', 'filter' => static function ($sum) {
+            ['sum', 'filter', 'filter' => static function ($sum) : float {
                 return round((float)$sum, 2);
             }]
         ];

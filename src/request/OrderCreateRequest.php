@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 03:04:58
+ * @version 03.11.20 19:49:59
  */
 
 declare(strict_types = 1);
@@ -68,7 +68,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['storeOrderId', 'trim'],
@@ -84,7 +84,7 @@ class OrderCreateRequest extends MonoPartsRequest
             ['invoiceDate', 'date', 'format' => 'php:Y-m-d'],
 
             ['invoiceNum', 'trim'],
-            ['invoiceNum', 'default', 'value' => function () {
+            ['invoiceNum', 'default', 'value' => function () : string {
                 return $this->storeOrderId;
             }],
             ['invoiceNum', 'string', 'max' => 2 ** 31 - 1],
@@ -100,7 +100,7 @@ class OrderCreateRequest extends MonoPartsRequest
                 if (empty($this->{$attribute})) {
                     $this->addError($attribute, 'Требуется указать варианты кол-ва платежей');
                 } else {
-                    $this->{$attribute} = array_unique(array_map(function ($count) use ($attribute) {
+                    $this->{$attribute} = array_unique(array_map(function ($count) use ($attribute) : int {
                         if ($count < 2 || ! preg_match('~^\d+$~u', (string)$count)) {
                             $this->addError($attribute, 'Некорректное кол-во: ' . $count);
                         } else {
@@ -143,7 +143,7 @@ class OrderCreateRequest extends MonoPartsRequest
                 }, 0);
             }],
             ['sum', 'number', 'min' => MonoPartsModule::SUM_MIN],
-            ['sum', 'filter', 'filter' => static function ($sum) {
+            ['sum', 'filter', 'filter' => static function ($sum) : float {
                 return round((float)$sum, 2);
             }],
 
@@ -175,7 +175,7 @@ class OrderCreateRequest extends MonoPartsRequest
                 'number' => $this->invoiceNum,
                 'point_id' => $this->pointId,
                 'source' => $this->source
-            ], static function ($val) {
+            ], static function ($val) : bool {
                 return $val !== null && $val !== '';
             }),
             'available_programs' => [
@@ -184,7 +184,7 @@ class OrderCreateRequest extends MonoPartsRequest
                     'type' => $this->programType
                 ]
             ],
-            'products' => array_map(static function (Product $prod) {
+            'products' => array_map(static function (Product $prod) : array {
                 return $prod->data;
             }, $this->products),
             'result_callback' => (string)$this->callback

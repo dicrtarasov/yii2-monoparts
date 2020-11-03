@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 03:04:22
+ * @version 03.11.20 19:51:37
  */
 
 declare(strict_types = 1);
@@ -22,7 +22,7 @@ class ValidateClientRequestTest extends AbstractTest
      *
      * @throws Exception
      */
-    public function testSend()
+    public function testSend() : void
     {
         $request = $this->module()->createValidateClientRequest([
             'phone' => MonoParts::TEST_PHONE

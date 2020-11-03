@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 00:53:15
+ * @version 03.11.20 19:47:17
  */
 
 declare(strict_types = 1);
@@ -30,7 +30,7 @@ abstract class AbstractTest extends TestCase
      *
      * @return MonoPartsModule
      */
-    protected function module()
+    protected function module() : MonoPartsModule
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::$app->getModule('monoparts');

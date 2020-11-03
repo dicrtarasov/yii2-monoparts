@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:22:38
+ * @version 03.11.20 19:48:40
  */
 
 declare(strict_types = 1);
@@ -25,7 +25,7 @@ class OrderConfirmRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['orderId', 'trim'],

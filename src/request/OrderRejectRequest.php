@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:27:10
+ * @version 03.11.20 19:50:08
  */
 
 declare(strict_types = 1);
@@ -25,7 +25,7 @@ class OrderRejectRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['orderId', 'trim'],

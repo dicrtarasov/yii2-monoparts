@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:44:28
+ * @version 03.11.20 19:48:16
  */
 
 declare(strict_types = 1);
@@ -53,7 +53,7 @@ class MonoPartsResponse extends Model
      *
      * @param array $data
      */
-    public function setData(array $data)
+    public function setData(array $data) : void
     {
         $this->setAttributes($data, false);
     }

@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:52:04
+ * @version 03.11.20 19:47:41
  */
 
 declare(strict_types = 1);
@@ -69,7 +69,7 @@ class MonoPartsModule extends Module implements MonoParts
      * @inheritDoc
      * @throws InvalidConfigException
      */
-    public function init()
+    public function init() : void
     {
         parent::init();
 
@@ -101,7 +101,7 @@ class MonoPartsModule extends Module implements MonoParts
      * @param string $content
      * @return string
      */
-    public function signature(string $content)
+    public function signature(string $content) : string
     {
         return base64_encode(hash_hmac('sha256', $content, $this->secretKey, true));
     }
@@ -115,7 +115,7 @@ class MonoPartsModule extends Module implements MonoParts
      * @return Client
      * @throws InvalidConfigException
      */
-    public function getHttpClient()
+    public function getHttpClient() : Client
     {
         if (! isset($this->_httpClient)) {
             $this->_httpClient = Yii::createObject(array_merge([

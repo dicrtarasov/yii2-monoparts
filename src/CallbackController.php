@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 02:48:50
+ * @version 03.11.20 19:47:17
  */
 
 declare(strict_types = 1);
@@ -34,7 +34,7 @@ class CallbackController extends Controller
      *
      * @throws BadRequestHttpException
      */
-    public function actionIndex()
+    public function actionIndex() : void
     {
         if (! Yii::$app->request->isPost) {
             throw new BadRequestHttpException();

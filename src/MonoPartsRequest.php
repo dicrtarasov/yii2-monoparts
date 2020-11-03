@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 24.08.20 01:57:00
+ * @version 03.11.20 19:53:01
  */
 
 declare(strict_types = 1);
@@ -80,6 +80,8 @@ abstract class MonoPartsRequest extends Model implements MonoParts
      *
      * @return array данные ответа (переопределяется в реализации)
      * @throws Exception
+     * @noinspection PhpMissingReturnTypeInspection
+     * @noinspection ReturnTypeCanBeDeclaredInspection
      */
     public function send()
     {
@@ -89,7 +91,7 @@ abstract class MonoPartsRequest extends Model implements MonoParts
         }
 
         // фильтруем данные
-        $data = array_filter($this->data(), static function ($val) {
+        $data = array_filter($this->data(), static function ($val) : bool {
             return $val !== null && $val !== '' && $val !== [];
         });
 
