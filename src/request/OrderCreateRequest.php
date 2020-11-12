@@ -3,17 +3,17 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:49:59
+ * @version 12.11.20 06:19:23
  */
 
 declare(strict_types = 1);
 namespace dicr\monoparts\request;
 
+use dicr\json\EntityValidator;
 use dicr\monoparts\MonoPartsModule;
 use dicr\monoparts\MonoPartsRequest;
 use dicr\monoparts\PhoneValidator;
 use dicr\monoparts\Product;
-use dicr\validate\ValidateException;
 use yii\base\Exception;
 
 use function array_filter;
@@ -99,7 +99,7 @@ class OrderCreateRequest extends MonoPartsRequest
             ['partsCount', function ($attribute) {
                 if (empty($this->{$attribute})) {
                     $this->addError($attribute, 'Требуется указать варианты кол-ва платежей');
-                } else {
+                } elseif (is_array($this->{$attribute})) {
                     $this->{$attribute} = array_unique(array_map(function ($count) use ($attribute) : int {
                         if ($count < 2 || ! preg_match('~^\d+$~u', (string)$count)) {
                             $this->addError($attribute, 'Некорректное кол-во: ' . $count);
@@ -111,6 +111,8 @@ class OrderCreateRequest extends MonoPartsRequest
                     }, (array)($this->{$attribute} ?? [])), SORT_NUMERIC);
 
                     sort($this->{$attribute}, SORT_NUMERIC);
+                } else {
+                    $this->addError($attribute, 'Должен быть массивом');
                 }
             }],
 
@@ -118,24 +120,9 @@ class OrderCreateRequest extends MonoPartsRequest
             ['programType', 'default', 'value' => self::PROGRAM_TYPE],
 
             ['products', 'required'],
-            ['products', function ($attribute) {
-                if (is_array($this->{$attribute})) {
-                    foreach ($this->{$attribute} as $prod) {
-                        if ($prod instanceof Product) {
-                            if (! $prod->validate()) {
-                                $this->addError(
-                                    $attribute, (new ValidateException($prod))->getMessage()
-                                );
-                            }
-                        } else {
-                            $this->addError($attribute, 'Товар должен быть типом Product');
-                        }
-                    }
-                } else {
-                    $this->addError($attribute, 'Товары должны быть массивом');
-                }
-            }],
+            ['products', EntityValidator::class, 'class' => [Product::class]],
 
+            // после проверки товаров
             ['sum', 'trim'],
             ['sum', 'default', 'value' => function () {
                 return array_reduce($this->products, static function (float $sum, Product $prod) {
@@ -156,7 +143,17 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url(): string
+    public function attributeEntities() : array
+    {
+        return array_merge(parent::attributeEntities(), [
+            'products' => [Product::class]
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function url() : string
     {
         return 'order/create';
     }
@@ -164,7 +161,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function data(): array
+    public function getJson() : array
     {
         return [
             'store_order_id' => $this->storeOrderId,
@@ -185,7 +182,7 @@ class OrderCreateRequest extends MonoPartsRequest
                 ]
             ],
             'products' => array_map(static function (Product $prod) : array {
-                return $prod->data;
+                return $prod->json;
             }, $this->products),
             'result_callback' => (string)$this->callback
         ];
@@ -197,10 +194,10 @@ class OrderCreateRequest extends MonoPartsRequest
      * @return OrderCreateResponse
      * @throws Exception
      */
-    public function send(): OrderCreateResponse
+    public function send() : OrderCreateResponse
     {
-        return new OrderCreateResponse($this, [
-            'data' => parent::send()
+        return new OrderCreateResponse([
+            'json' => parent::send()
         ]);
     }
 }

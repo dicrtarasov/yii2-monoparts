@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:47:17
+ * @version 12.11.20 06:15:59
  */
 
 declare(strict_types = 1);
@@ -49,7 +49,7 @@ class CallbackController extends Controller
         Yii::debug('Monoparts callback: ' . Yii::$app->request->rawBody, __METHOD__);
 
         if (! empty($this->module->handler)) {
-            $response = new OrderStateResponse(null, Yii::$app->request->bodyParams);
+            $response = new OrderStateResponse(Yii::$app->request->bodyParams);
             call_user_func($this->module->handler, $response);
         }
     }

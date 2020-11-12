@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:50:46
+ * @version 12.11.20 06:13:03
  */
 
 declare(strict_types = 1);
@@ -37,19 +37,9 @@ class OrderStateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url(): string
+    protected function url() : string
     {
         return 'order/state';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'order_id' => $this->orderId
-        ];
     }
 
     /**
@@ -58,10 +48,10 @@ class OrderStateRequest extends MonoPartsRequest
      * @return OrderStateResponse
      * @throws Exception
      */
-    public function send(): OrderStateResponse
+    public function send() : OrderStateResponse
     {
-        return new OrderStateResponse($this, [
-            'data' => parent::send()
+        return new OrderStateResponse([
+            'json' => parent::send()
         ]);
     }
 }

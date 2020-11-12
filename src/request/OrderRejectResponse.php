@@ -3,13 +3,15 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:50:14
+ * @version 12.11.20 06:11:20
  */
 
 declare(strict_types = 1);
 namespace dicr\monoparts\request;
 
 use dicr\monoparts\MonoPartsResponse;
+
+use function array_merge;
 
 /**
  * Ответ на запрос OrderReject.
@@ -30,11 +32,11 @@ class OrderRejectResponse extends MonoPartsResponse
     /**
      * @inheritDoc
      */
-    public function setData(array $data) : void
+    public function attributeFields() : array
     {
-        $this->orderId = isset($data['order_id']) ? (string)$data['order_id'] : null;
-        $this->state = isset($data['state']) ? (string)$data['state'] : null;
-        $this->subState = isset($data['order_sub_state']) ? (string)$data['order_sub_state'] : null;
+        return array_merge(parent::attributeFields(), [
+            'subState' => 'order_sub_state'
+        ]);
     }
 }
 

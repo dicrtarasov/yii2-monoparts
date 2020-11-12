@@ -3,22 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:51:37
+ * @version 12.11.20 05:54:20
  */
 
 declare(strict_types = 1);
 namespace dicr\monoparts;
 
-use yii\base\Model;
-
-use function round;
+use dicr\json\JsonEntity;
 
 /**
  * Информация о товаре.
  *
  * @property-read array $data данные JSON
  */
-class Product extends Model
+class Product extends JsonEntity
 {
     /** @var string */
     public $name;
@@ -45,23 +43,9 @@ class Product extends Model
 
             ['sum', 'required'],
             ['sum', 'number', 'min' => 0.01],
-            ['sum', 'filter', 'filter' => static function ($sum) : float {
-                return round((float)$sum, 2);
+            ['sum', 'filter', 'filter' => static function ($val) : string {
+                return sprintf('%.2f', (float)$val);
             }]
-        ];
-    }
-
-    /**
-     * Данные JSON.
-     *
-     * @return array
-     */
-    public function getData(): array
-    {
-        return [
-            'name' => $this->name,
-            'count' => $this->count,
-            'sum' => sprintf('%.2f', $this->sum)
         ];
     }
 }

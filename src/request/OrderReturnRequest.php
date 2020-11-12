@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:50:46
+ * @version 12.11.20 06:13:01
  */
 
 declare(strict_types = 1);
@@ -60,7 +60,7 @@ class OrderReturnRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url(): string
+    protected function url() : string
     {
         return 'order/return';
     }
@@ -68,14 +68,11 @@ class OrderReturnRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function data(): array
+    public function attributeFields() : array
     {
-        return [
-            'order_id' => $this->orderId,
-            'return_money_to_card' => $this->returnMoney,
-            'store_return_id' => $this->storeReturnId,
-            'sum' => $this->sum
-        ];
+        return array_merge(parent::attributeFields(), [
+            'returnMoney' => 'return_money_to_card'
+        ]);
     }
 
     /**
@@ -84,10 +81,10 @@ class OrderReturnRequest extends MonoPartsRequest
      * @return OrderReturnResponse
      * @throws Exception
      */
-    public function send(): OrderReturnResponse
+    public function send() : OrderReturnResponse
     {
-        return new OrderReturnResponse($this, [
-            'data' => parent::send()
+        return new OrderReturnResponse([
+            'json' => parent::send()
         ]);
     }
 }

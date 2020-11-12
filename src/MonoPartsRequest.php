@@ -3,16 +3,16 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:53:01
+ * @version 12.11.20 06:08:14
  */
 
 declare(strict_types = 1);
 namespace dicr\monoparts;
 
+use dicr\json\JsonEntity;
 use dicr\validate\ValidateException;
 use Yii;
 use yii\base\Exception;
-use yii\base\Model;
 use yii\helpers\Json;
 use yii\httpclient\Client;
 
@@ -20,10 +20,8 @@ use function array_filter;
 
 /**
  * Базовый класс запросов.
- *
- * @property-read MonoPartsModule $module модуль
  */
-abstract class MonoPartsRequest extends Model implements MonoParts
+abstract class MonoPartsRequest extends JsonEntity implements MonoParts
 {
     /** @var MonoPartsModule */
     protected $_module;
@@ -42,38 +40,21 @@ abstract class MonoPartsRequest extends Model implements MonoParts
     }
 
     /**
-     * Модуль.
-     *
-     * @return MonoPartsModule
-     */
-    public function getModule(): MonoPartsModule
-    {
-        return $this->_module;
-    }
-
-    /**
      * Адрес запроса.
      *
      * @return string
      */
-    abstract protected function url(): string;
+    abstract protected function url() : string;
 
     /**
      * Метод HTTP-запроса.
      *
      * @return string
      */
-    protected function method(): string
+    protected function method() : string
     {
         return 'post';
     }
-
-    /**
-     * Данные для JSON.
-     *
-     * @return array
-     */
-    abstract protected function data(): array;
 
     /**
      * Отправка запроса.
@@ -90,13 +71,10 @@ abstract class MonoPartsRequest extends Model implements MonoParts
             throw new ValidateException($this);
         }
 
-        // фильтруем данные
-        $data = array_filter($this->data(), static function ($val) : bool {
-            return $val !== null && $val !== '' && $val !== [];
-        });
-
         // JSON
-        $json = Json::encode($data);
+        $json = Json::encode(array_filter($this->json, static function ($val) : bool {
+            return $val !== null && $val !== '' && $val !== [];
+        }));
 
         // запрос
         $request = $this->_module->httpClient->createRequest()
@@ -111,13 +89,13 @@ abstract class MonoPartsRequest extends Model implements MonoParts
                 'signature' => $this->_module->signature($json)
             ]);
 
-        Yii::debug('Отправка запроса: ' . $request->toString(), __METHOD__);
-
+        Yii::debug('Запрос: ' . $request->toString(), __METHOD__);
         $response = $request->send();
-        $response->format = Client::FORMAT_JSON;
+        Yii::debug('Ответ: ' . $response->toString(), __METHOD__);
 
+        $response->format = Client::FORMAT_JSON;
         if (! $response->isOk) {
-            throw new Exception('Ошибка запроса: ' . $response->data['message'] ?? $response->toString());
+            throw new Exception('HTTP-error: ' . $response->data['message'] ?? $response->statusCode);
         }
 
         return $response->data;

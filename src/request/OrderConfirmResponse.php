@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:48:57
+ * @version 12.11.20 06:09:44
  */
 
 declare(strict_types = 1);
@@ -13,8 +13,6 @@ use dicr\monoparts\MonoPartsResponse;
 
 /**
  * Ответ на запрос OrderConfirm.
- *
- * @property-read OrderConfirmRequest $request
  */
 class OrderConfirmResponse extends MonoPartsResponse
 {
@@ -30,11 +28,11 @@ class OrderConfirmResponse extends MonoPartsResponse
     /**
      * @inheritDoc
      */
-    public function setData(array $data) : void
+    public function attributeFields() : array
     {
-        $this->orderId = isset($data['order_id']) ? (string)$data['order_id'] : null;
-        $this->state = isset($data['state']) ? (string)$data['state'] : null;
-        $this->subState = isset($data['order_sub_state']) ? (string)$data['order_sub_state'] : null;
+        return array_merge(parent::attributeFields(), [
+            'subState' => 'order_sub_state'
+        ]);
     }
 }
 

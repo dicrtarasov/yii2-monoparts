@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:50:08
+ * @version 12.11.20 06:10:39
  */
 
 declare(strict_types = 1);
@@ -37,19 +37,9 @@ class OrderRejectRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url(): string
+    protected function url() : string
     {
         return 'order/reject';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'order_id' => $this->orderId
-        ];
     }
 
     /**
@@ -58,10 +48,10 @@ class OrderRejectRequest extends MonoPartsRequest
      * @return OrderRejectResponse
      * @throws Exception
      */
-    public function send(): OrderRejectResponse
+    public function send() : OrderRejectResponse
     {
-        return new OrderRejectResponse($this, [
-            'data' => parent::send()
+        return new OrderRejectResponse([
+            'json' => parent::send()
         ]);
     }
 }

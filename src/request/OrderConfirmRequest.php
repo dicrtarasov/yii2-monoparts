@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:48:40
+ * @version 12.11.20 06:09:13
  */
 
 declare(strict_types = 1);
@@ -43,16 +43,6 @@ class OrderConfirmRequest extends MonoPartsRequest
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'order_id' => $this->orderId
-        ];
-    }
-
-    /**
      * Отправка запроса.
      *
      * @return OrderConfirmResponse
@@ -60,8 +50,8 @@ class OrderConfirmRequest extends MonoPartsRequest
      */
     public function send(): OrderConfirmResponse
     {
-        return new OrderConfirmResponse($this, [
-            'data' => parent::send()
+        return new OrderConfirmResponse([
+            'json' => parent::send()
         ]);
     }
 }

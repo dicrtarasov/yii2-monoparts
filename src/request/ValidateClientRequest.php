@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license proprietary
- * @version 03.11.20 19:47:17
+ * @version 12.11.20 06:14:44
  */
 
 declare(strict_types = 1);
@@ -38,19 +38,9 @@ class ValidateClientRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url(): string
+    protected function url() : string
     {
         return 'v2/client/validate';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'phone' => $this->phone
-        ];
     }
 
     /**
@@ -59,10 +49,10 @@ class ValidateClientRequest extends MonoPartsRequest
      * @return ValidateClientResponse
      * @throws Exception
      */
-    public function send(): ValidateClientResponse
+    public function send() : ValidateClientResponse
     {
-        return new ValidateClientResponse($this, [
-            'data' => parent::send()
+        return new ValidateClientResponse([
+            'json' => parent::send()
         ]);
     }
 }
