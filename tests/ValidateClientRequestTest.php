@@ -24,7 +24,7 @@ class ValidateClientRequestTest extends AbstractTest
      */
     public function testSend() : void
     {
-        $request = $this->module()->createValidateClientRequest([
+        $request = $this->module()->validateClientRequest([
             'phone' => MonoParts::TEST_PHONE
         ]);
 

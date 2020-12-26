@@ -39,7 +39,7 @@ class PaymentRequestTest extends AbstractTest
         $storeOrderId = (string)time();
 
         // отправляем заявку на платеж
-        $request = $this->module()->createOrderCreateRequest([
+        $request = $this->module()->orderCreateRequest([
             'storeOrderId' => $storeOrderId,
             'clientPhone' => MonoParts::TEST_PHONE,
             'partsCount' => [MonoParts::TEST_PARTS_COUNT],
@@ -54,7 +54,7 @@ class PaymentRequestTest extends AbstractTest
         echo 'OrderId: ' . $response->orderId . "\n";
 
         // проверяем состояние платежа
-        $request = $this->module()->createOrderStateRequest([
+        $request = $this->module()->orderStateRequest([
             'orderId' => $response->orderId
         ]);
 

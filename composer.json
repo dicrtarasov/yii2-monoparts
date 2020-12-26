@@ -23,7 +23,7 @@
         "yiisoft/yii2-httpclient": "~2.0",
 
         "dicr/yii2-json": "~2.0",
-        "dicr/yii2-validate": "~2.0"
+        "dicr/yii2-validate": "~2.3"
     },
     "autoload": {
         "psr-4": {
@@ -36,12 +36,12 @@
         }
     },
     "repositories": [
+        {"type": "composer", "url": "https://asset-packagist.org"},
         {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-json.git"},
-        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-validate.git"},
-        {"type": "composer", "url": "https://asset-packagist.org"}
+        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-validate.git"}
     ],
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "phpunit/phpunit": "~9.4"
+        "phpunit/phpunit": "~9.5"
     }
 }

@@ -49,7 +49,10 @@ class CallbackController extends Controller
         Yii::debug('Monoparts callback: ' . Yii::$app->request->rawBody, __METHOD__);
 
         if (! empty($this->module->handler)) {
-            $response = new OrderStateResponse(Yii::$app->request->bodyParams);
+            $response = new OrderStateResponse([
+                'json' => Yii::$app->request->bodyParams
+            ]);
+
             call_user_func($this->module->handler, $response);
         }
     }

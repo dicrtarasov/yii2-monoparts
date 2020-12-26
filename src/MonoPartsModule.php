@@ -134,7 +134,7 @@ class MonoPartsModule extends Module implements MonoParts
      * @return MonoPartsRequest
      * @throws InvalidConfigException
      */
-    public function createRequest(array $config): MonoPartsRequest
+    public function request(array $config) : MonoPartsRequest
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::createObject($config, [$this]);
@@ -147,10 +147,10 @@ class MonoPartsModule extends Module implements MonoParts
      * @return OrderCreateRequest
      * @throws InvalidConfigException
      */
-    public function createOrderCreateRequest(array $config = []): OrderCreateRequest
+    public function orderCreateRequest(array $config = []) : OrderCreateRequest
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->createRequest(array_merge([
+        return $this->request(array_merge([
             'class' => OrderCreateRequest::class,
             'callback' => Url::to(['/' . $this->uniqueId . '/callback'], true)
         ], $this->createRequestConfig ?: [], $config));
@@ -163,10 +163,10 @@ class MonoPartsModule extends Module implements MonoParts
      * @return ValidateClientRequest
      * @throws InvalidConfigException
      */
-    public function createValidateClientRequest(array $config = []): ValidateClientRequest
+    public function validateClientRequest(array $config = []) : ValidateClientRequest
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->createRequest(array_merge([
+        return $this->request(array_merge([
             'class' => ValidateClientRequest::class
         ], $this->createRequestConfig ?: [], $config));
     }
@@ -178,10 +178,10 @@ class MonoPartsModule extends Module implements MonoParts
      * @return OrderStateRequest
      * @throws InvalidConfigException
      */
-    public function createOrderStateRequest(array $config = []): OrderStateRequest
+    public function orderStateRequest(array $config = []) : OrderStateRequest
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->createRequest(array_merge([
+        return $this->request(array_merge([
             'class' => OrderStateRequest::class
         ], $this->createRequestConfig ?: [], $config));
     }
