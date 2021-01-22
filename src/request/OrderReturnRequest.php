@@ -51,9 +51,7 @@ class OrderReturnRequest extends MonoPartsRequest
 
             ['sum', 'required'],
             ['sum', 'number', 'min' => 0.01],
-            ['sum', 'filter', 'filter' => static function ($sum) : float {
-                return round((float)$sum, 2);
-            }]
+            ['sum', 'filter', 'filter' => static fn($sum) : float => round((float)$sum, 2)]
         ];
     }
 

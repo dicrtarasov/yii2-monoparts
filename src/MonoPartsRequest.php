@@ -44,14 +44,14 @@ abstract class MonoPartsRequest extends JsonEntity implements MonoParts
      *
      * @return string
      */
-    abstract protected function url() : string;
+    abstract protected function url(): string;
 
     /**
      * Метод HTTP-запроса.
      *
      * @return string
      */
-    protected function method() : string
+    protected function method(): string
     {
         return 'post';
     }
@@ -72,9 +72,10 @@ abstract class MonoPartsRequest extends JsonEntity implements MonoParts
         }
 
         // JSON
-        $json = Json::encode(array_filter($this->json, static function ($val) : bool {
-            return $val !== null && $val !== '' && $val !== [];
-        }));
+        $json = Json::encode(array_filter(
+                $this->json,
+                static fn($val): bool => $val !== null && $val !== '' && $val !== [])
+        );
 
         // запрос
         $request = $this->_module->httpClient->createRequest()

@@ -68,7 +68,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             ['storeOrderId', 'trim'],
@@ -84,9 +84,7 @@ class OrderCreateRequest extends MonoPartsRequest
             ['invoiceDate', 'date', 'format' => 'php:Y-m-d'],
 
             ['invoiceNum', 'trim'],
-            ['invoiceNum', 'default', 'value' => function () : string {
-                return $this->storeOrderId;
-            }],
+            ['invoiceNum', 'default', 'value' => fn(): string => $this->storeOrderId],
             ['invoiceNum', 'string', 'max' => 2 ** 31 - 1],
 
             ['pointId', 'trim'],
@@ -96,11 +94,11 @@ class OrderCreateRequest extends MonoPartsRequest
             ['source', 'default', 'value' => self::SOURCE_INTERNET],
             ['source', 'in', 'range' => [self::SOURCE_STORE, self::SOURCE_INTERNET]],
 
-            ['partsCount', function ($attribute) {
+            ['partsCount', function($attribute) {
                 if (empty($this->{$attribute})) {
                     $this->addError($attribute, 'Требуется указать варианты кол-ва платежей');
                 } elseif (is_array($this->{$attribute})) {
-                    $this->{$attribute} = array_unique(array_map(function ($count) use ($attribute) : int {
+                    $this->{$attribute} = array_unique(array_map(function($count) use ($attribute): int {
                         if ($count < 2 || ! preg_match('~^\d+$~u', (string)$count)) {
                             $this->addError($attribute, 'Некорректное кол-во: ' . $count);
                         } else {
@@ -124,15 +122,13 @@ class OrderCreateRequest extends MonoPartsRequest
 
             // после проверки товаров
             ['sum', 'trim'],
-            ['sum', 'default', 'value' => function () {
-                return array_reduce($this->products, static function (float $sum, Product $prod) {
-                    return $sum + $prod->count * $prod->sum;
-                }, 0);
-            }],
+            ['sum', 'default', 'value' => fn() => array_reduce(
+                $this->products,
+                static fn(float $sum, Product $prod): float => $sum + $prod->count * $prod->sum,
+                0
+            )],
             ['sum', 'number', 'min' => MonoPartsModule::SUM_MIN],
-            ['sum', 'filter', 'filter' => static function ($sum) : float {
-                return round((float)$sum, 2);
-            }],
+            ['sum', 'filter', 'filter' => static fn($sum): float => round((float)$sum, 2)],
 
             ['callback', 'trim'],
             ['callback', 'default'],
@@ -143,7 +139,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function attributeEntities() : array
+    public function attributeEntities(): array
     {
         return array_merge(parent::attributeEntities(), [
             'products' => [Product::class]
@@ -153,7 +149,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    protected function url() : string
+    protected function url(): string
     {
         return 'order/create';
     }
@@ -161,7 +157,7 @@ class OrderCreateRequest extends MonoPartsRequest
     /**
      * @inheritDoc
      */
-    public function getJson() : array
+    public function getJson(): array
     {
         return [
             'store_order_id' => $this->storeOrderId,
@@ -172,18 +168,17 @@ class OrderCreateRequest extends MonoPartsRequest
                 'number' => $this->invoiceNum,
                 'point_id' => $this->pointId,
                 'source' => $this->source
-            ], static function ($val) : bool {
-                return $val !== null && $val !== '';
-            }),
+            ], static fn($val): bool => $val !== null && $val !== ''),
             'available_programs' => [
                 [
                     'available_parts_count' => $this->partsCount,
                     'type' => $this->programType
                 ]
             ],
-            'products' => array_map(static function (Product $prod) : array {
-                return $prod->json;
-            }, $this->products),
+            'products' => array_map(
+                static fn(Product $prod): array => $prod->json,
+                $this->products
+            ),
             'result_callback' => (string)$this->callback
         ];
     }
@@ -194,7 +189,7 @@ class OrderCreateRequest extends MonoPartsRequest
      * @return OrderCreateResponse
      * @throws Exception
      */
-    public function send() : OrderCreateResponse
+    public function send(): OrderCreateResponse
     {
         return new OrderCreateResponse([
             'json' => parent::send()

@@ -43,9 +43,7 @@ class Product extends JsonEntity
 
             ['sum', 'required'],
             ['sum', 'number', 'min' => 0.01],
-            ['sum', 'filter', 'filter' => static function ($val) : string {
-                return sprintf('%.2f', (float)$val);
-            }]
+            ['sum', 'filter', 'filter' => static fn($val) : string => sprintf('%.2f', (float)$val)]
         ];
     }
 }
